@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bio Bounce • Automatic Rewards Edition</title>
+<style>
+:root{color-scheme:dark;--ink:#fff3dd;--muted:#d3b9a5;--mint:#f1bd65;--panel:#3b2528}*{box-sizing:border-box}body{margin:0;background:#23171b;color:var(--ink);font:15px system-ui,sans-serif}button,input,select{font:inherit}button{cursor:pointer;border:1px solid #79544e;border-radius:11px;padding:10px 16px;background:#573536;color:white;font-weight:700}button:hover{filter:brightness(1.18)}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #ffdc78;outline-offset:3px}button.primary{background:var(--mint);color:#321e1c;border:0}button:disabled{opacity:.5;cursor:default}header,main,footer{max-width:1180px;margin:auto;padding:18px 24px}header{display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{font-size:25px;font-weight:900;letter-spacing:-1px}.brand span{color:var(--mint)}.eyebrow{color:var(--mint);font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase}.subtitle{color:var(--muted);margin:5px 0 0;font-size:13px}.actions{display:flex;gap:8px;flex-wrap:wrap}.worlds{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px}.world{padding:12px 14px;border:1px solid #704840;border-radius:12px;color:var(--muted);font-size:12px}.world.active{border-color:var(--mint);background:#603a2e;color:#fff0cc}.world b{display:block;margin-top:4px;font-size:14px}.game{border:1px solid #765247;border-radius:18px;overflow:hidden;background:#342025;position:relative;box-shadow:0 20px 60px #0004}canvas{display:block;width:100%;height:auto;aspect-ratio:1100/490}.hud{display:grid;grid-template-columns:1fr 1fr;background:#43282b}.stats{padding:12px 16px;line-height:1.7;font-size:13px}.stats+ .stats{border-left:1px solid #765247}.p1{color:#f5cc70}.p2{color:#ff987d}.notice{min-height:27px;color:#efd2b4;padding:10px 16px;background:#342024;font-size:13px}.guide{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:16px;margin-top:20px}.guide article{padding:18px;border:1px solid #69453e;border-radius:14px;background:#372329}.guide h3{margin:0 0 8px;font-size:14px}.guide p{font-size:13px;line-height:1.6;color:var(--muted);margin:0}kbd{font:700 12px system-ui;background:#694237;border-radius:4px;padding:2px 6px;color:white}footer{font-size:12px;color:var(--muted);padding-top:0}.overlay{position:fixed;inset:0;background:#1d1015e8;z-index:10;display:grid;place-items:center;padding:20px;overflow:auto}.overlay[hidden]{display:none}.card{width:min(600px,100%);border:1px solid #93654f;background:#462a2e;border-radius:22px;padding:30px;box-shadow:0 25px 100px #0009;max-height:92vh;overflow:auto}.card h1{font-size:38px;letter-spacing:-1.5px;line-height:1.1;margin:12px 0}.card h2{font-size:24px;line-height:1.3;margin:12px 0}.card p{color:#e3c6b0;line-height:1.6}.fields{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0}label{font-size:13px;color:#e3c6b0}input,select{width:100%;border:1px solid #8d6254;background:#2d1d22;color:white;padding:11px;border-radius:9px;margin-top:6px}.answers{display:grid;gap:10px;margin:18px 0}.answers button{text-align:left;font-weight:500;line-height:1.4}.answers .wrong{border-color:#ff9b92;background:#5d303a}.feedback{min-height:26px;line-height:1.5;color:#ffdc87;margin:10px 0 18px}.small{font-size:12px}.reward{padding:12px;background:#61462e;border-radius:10px;color:#ffe1a1!important}.wide{width:100%}.results{border-collapse:collapse;width:100%;font-size:13px;margin:16px 0}.results th,.results td{padding:9px 5px;text-align:left;border-bottom:1px solid #79544e}.touch{display:none;gap:8px;padding:12px}.touch button{touch-action:none;min-width:65px}@media(max-width:700px){header,main,footer{padding:14px}.brand{font-size:21px}.world{padding:9px 7px;font-size:10px}.world b{font-size:11px}.guide{grid-template-columns:1fr}.card{padding:22px}.card h1{font-size:32px}.stats{font-size:11px;padding:9px}.touch{display:flex}header{align-items:flex-start}.actions button{padding:8px;font-size:12px}}@media print{body>*{display:none!important}#end{display:block!important;position:static;background:white;color:black;padding:0}#end .card{border:0;background:white;color:black;box-shadow:none;width:100%;max-height:none}#end p{color:#222}#end button{display:none}.results td,.results th{border-color:#aaa}}
+
+.shop-card{width:min(780px,100%)}.shop-top{display:flex;gap:20px;align-items:center;margin:18px 0}.shop-avatar{width:80px;height:95px;flex-shrink:0;background:#302027;border-radius:12px;padding:8px}.shop-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.shop-item{border:1px solid #8d6254;background:#382328;padding:14px;border-radius:12px;display:flex;flex-direction:column;gap:8px}.shop-item h3{font-size:15px;margin:0}.shop-item p{font-size:12px;line-height:1.5;margin:0;flex:1}.shop-item button{font-size:13px;padding:9px}.shop-item.locked{opacity:.65}.shop-label{font-size:11px;color:#f5cc70}.shop-tabs{display:flex;flex-wrap:wrap;gap:7px;margin:14px 0}.shop-tabs button[aria-pressed="true"]{background:#f1bd65;color:#321e1c}.shop-message{min-height:24px;color:#ffe1a1;line-height:1.5;font-size:13px}@media(max-width:550px){.shop-grid{grid-template-columns:1fr}.shop-top{gap:12px}}
+</style>
+</head>
+<body>
+<header><div><div class="brand">BIO <span>BOUNCE</span> 🍂</div><p class="subtitle">November edition • Automatic rewards for all 16 questions</p></div><div class="actions"><button id="shopBtn">🪙 Upgrade shop</button><button id="pauseBtn">Pause</button><button id="helpBtn">How to play</button><button id="restartBtn">New game</button></div></header>
+<main>
+<div class="worlds" id="worlds"></div>
+<section class="game" aria-label="Biology platform game">
+<div class="hud"><div class="stats p1" id="hud0">Player 1 • WASD</div><div class="stats p2" id="hud1">Player 2 • Arrow keys</div></div>
+<canvas id="canvas" width="1100" height="490" tabindex="0" aria-label="Shared-screen platform game. Both characters are visible together. Player 1: A and D move, W jumps. Player 2: arrow keys move and jump. Bump question boxes from underneath. Jump for airborne coins and land on monsters to clear them."></canvas>
+<div class="notice" id="notice" role="status">Jump under the glowing ? boxes. Both characters share the screen. One correct answer clears a box for the whole team.</div>
+<div class="touch" aria-label="Player 1 touch controls"><button data-key="KeyA">◀</button><button data-key="KeyD">▶</button><button data-key="KeyW">Jump</button><span class="small">Player 1</span></div>
+</section>
+<div class="guide"><article><h3>01 / Share the keyboard</h3><p><span class="p1">Player 1</span>: <kbd>A</kbd> <kbd>D</kbd> move, <kbd>W</kbd> jump.<br><span class="p2">Player 2</span>: <kbd>←</kbd> <kbd>→</kbd> move, <kbd>↑</kbd> jump.<br><kbd>S</kbd> or <kbd>↓</kbd> brakes. <kbd>P</kbd> pauses. Pipette: <kbd>F</kbd> for Player 1, <kbd>/</kbd> for Player 2.</p></article><article><h3>02 / Think. Unlock. Bounce.</h3><p>Hit boxes from below. Both players explore one shared screen. Solve each box once as a team, then both reach the flag. The character who bumps the box automatically earns its reward after a correct answer. Questions pause both players. Read the explanation before continuing. Follow coin arcs through the air, and land on monsters to clear them.</p></article><article><h3>03 / Earn your upgrades</h3><p>Every correct answer: +10 coins.<br>Box 1: growth mushroom · Box 2: shield<br>Box 3: double jump · Box 4: +20 bonus coins.<br>Press B or open the shop to spend coins. Buy a guinea pig buddy, lab coat, safety goggles, or bubble pipette! Outfits, hats, boots, magnets, and purchased double jump last for the adventure. Box powers last one world.</p></article></div>
+</main>
+<footer>Shared-screen multiplayer on one device • Best on a laptop or desktop • Four worlds, 16 shared team questions • No accounts or downloads required</footer>
+<div class="overlay" id="start"><div class="card"><div class="eyebrow">A November biology adventure</div><h1>Small scientists.<br>Big adventures.</h1><p>Explore together on one shared screen! Run, jump, and bump your way through four autumn biology worlds. Solve each question once for the team. Either character can bump a box and automatically earn its reward after a correct answer. Collect coins, buy outfits and abilities, and reach each finish flag together.</p><label>Game mode<select id="mode"><option value="2">Two players • same keyboard</option><option value="1">Solo practice • WASD or arrow keys</option></select></label><div class="fields"><label>Player 1 name<input id="name0" maxlength="18" placeholder="Golden scientist"></label><label>Player 2 name<input id="name1" maxlength="18" placeholder="Maple scientist"></label></div><p class="small">Both characters play together on one screen and share this keyboard. The camera zooms out to keep both visible. This version does not connect separate computers. There is no timer and no elimination. Falling returns you to a checkpoint.</p><button class="primary wide" id="startBtn">Let’s bounce →</button></div></div>
+<div class="overlay" id="quiz" hidden role="dialog" aria-modal="true" aria-labelledby="qTitle"><div class="card"><div class="eyebrow" id="qMeta"></div><p id="automaticReward" class="reward small"></p><h2 id="qTitle"></h2><div class="answers" id="answers"></div><div class="feedback" id="feedback" aria-live="polite"></div><button class="primary wide" id="continueBtn" hidden>Back to the adventure →</button><p class="small">Choose an answer, or press 1–4. Both players are paused.</p></div></div>
+<div class="overlay" id="info" hidden role="dialog" aria-modal="true" aria-labelledby="infoTitle"><div class="card"><div class="eyebrow">Take a breath</div><h2 id="infoTitle">Game paused</h2><p id="infoText"></p><button class="primary wide" id="resumeBtn">Resume →</button></div></div>
+<div class="overlay" id="end" hidden role="dialog" aria-modal="true" aria-labelledby="endTitle"><div class="card"><div class="eyebrow">All four worlds complete</div><h1 id="endTitle">Life science legends.</h1><p>You explored how cells transform energy and how the molecules of life support their work.</p><div id="report"></div><p class="small">Team first-try accuracy counts each shared question once. Questions answered shows each character’s contribution. Coins earned includes coins already spent in the shop.</p><div class="actions"><button class="primary" id="againBtn">Play again</button><button id="printBtn">Print results</button></div></div></div>
+<div class="overlay" id="shop" hidden role="dialog" aria-modal="true" aria-labelledby="shopTitle"><div class="card shop-card"><div class="eyebrow" id="shopMeta">Harvest trading post</div><h2 id="shopTitle">Make your scientist your own.</h2><p class="small">Spend each character’s own coins. Outfits and permanent abilities carry into later worlds. More items unlock as your team advances.</p><label>Shopping for<select id="shopPlayer"></select></label><div class="shop-top"><div class="shop-avatar" id="shopAvatar" aria-hidden="true"></div><div><strong id="shopWallet"></strong><p id="shopEquipment" class="small"></p></div></div><div class="shop-tabs"><button data-shop-tab="all" aria-pressed="true">All items</button><button data-shop-tab="style" aria-pressed="false">Outfits & hats</button><button data-shop-tab="accessory" aria-pressed="false">Accessories & buddy</button><button data-shop-tab="power" aria-pressed="false">Abilities</button></div><div class="shop-message" id="shopMessage" role="status" aria-live="polite"></div><div class="shop-grid" id="shopItems"></div><button class="primary wide" id="closeShopBtn" style="margin-top:20px">Back to adventure →</button><p class="small">The game is paused while you shop. Purchases last for this adventure; a new game resets them.</p></div></div>
+<script>
+'use strict';
+const $=id=>document.getElementById(id);
+const topics=[
+{name:'Cellular respiration',tag:'01 / HARVEST ATP VALLEY',sky:'#3a242d',hill:'#61323a',ground:'#82503a',accent:'#f2c477',icon:'ϟ'},
+{name:'Photosynthesis',tag:'02 / GOLDEN LEAF GARDENS',sky:'#443128',hill:'#70523a',ground:'#927340',accent:'#f6d78f',icon:'☀'},
+{name:'Fermentation',tag:'03 / CRANBERRY CAVERNS',sky:'#34212d',hill:'#643649',ground:'#86513e',accent:'#ecac87',icon:'◌'},
+{name:'Macromolecules',tag:'04 / AMBER MOLECULE HEIGHTS',sky:'#43292a',hill:'#744034',ground:'#a0653c',accent:'#ffd28a',icon:'⬡'}];
+// [question, choices, correct index, explanation, retry hint]
+const bank=[
+[['What is the main role of ATP in cells?',['Transfer usable energy for cellular work','Store genetic instructions','Make sunlight','Build the cell wall'],0,'ATP transfers energy to power processes such as active transport and movement.','Think about which molecule powers cellular work.'],['Where does glycolysis occur?',['Nucleus','Cytosol','Mitochondrial matrix','Chloroplast thylakoids'],1,'Glycolysis splits glucose into two pyruvate molecules in the cytosol and yields a net 2 ATP.','The first stage occurs outside the mitochondria.'],['In aerobic respiration, what is oxygen’s role?',['It supplies carbon atoms to glucose','It replaces every enzyme','It is the final electron acceptor','It breaks down ATP in glycolysis'],2,'Oxygen accepts electrons at the end of the electron transport chain and combines with hydrogen ions to form water.','Think about the end of the electron transport chain.'],['Which summarizes aerobic cellular respiration?',['Carbon dioxide + water + light → glucose + oxygen','Glucose → lactate only','ATP + oxygen → sunlight','Glucose + oxygen → carbon dioxide + water + energy'],3,'Aerobic respiration transfers chemical energy from glucose to ATP and releases heat; carbon dioxide and water are products.','Follow the energy stored in glucose.']],
+[['In plant cells, photosynthesis occurs in…',['Mitochondria','Chloroplasts','Ribosomes','Lysosomes'],1,'Chloroplasts contain chlorophyll and the structures needed for photosynthesis.','Look for the organelle containing chlorophyll.'],['The oxygen released during photosynthesis comes from…',['Glucose','Carbon dioxide','Water','ATP'],2,'During the light-dependent reactions, water is split, releasing electrons, hydrogen ions, and oxygen.','A molecule is split during the light-dependent reactions.'],['What does the Calvin cycle use to build sugar precursors?',['Oxygen only','Lactate and heat','Protein and DNA','Carbon dioxide, ATP, and NADPH'],3,'The Calvin cycle fixes carbon dioxide using ATP and NADPH made by the light-dependent reactions.','It needs a carbon source and energy-carrying molecules.'],['How are photosynthesis and cellular respiration related?',['Products of one can be reactants of the other','Both occur only in animals','Both release oxygen from water','Plants perform photosynthesis but never respiration'],0,'Photosynthesis produces glucose and oxygen; aerobic respiration uses them. Respiration produces carbon dioxide and water. Plants perform both processes.','Track glucose, oxygen, carbon dioxide, and water.']],
+[['Why is fermentation useful when oxygen is unavailable?',['It makes oxygen for mitochondria','It regenerates NAD+ so glycolysis can continue','It stops all glucose breakdown','It makes more ATP than aerobic respiration'],1,'Fermentation regenerates NAD+ from NADH. This allows glycolysis to keep producing a small amount of ATP.','Glycolysis needs a reusable electron carrier.'],['What are the main products of alcoholic fermentation in yeast?',['Oxygen and glucose','Lactate and oxygen','Ethanol and carbon dioxide','Starch and water'],2,'Yeast convert pyruvate into ethanol and carbon dioxide while regenerating NAD+.','Think about the gas bubbles made by yeast.'],['How much net ATP does glycolysis yield per glucose when paired with fermentation?',['0 ATP','About 30 ATP','100 ATP','2 ATP'],3,'Glycolysis yields a net 2 ATP per glucose. The fermentation reactions regenerate NAD+ without making additional ATP.','The ATP comes from glycolysis, not the fermentation reactions.'],['Which statement about lactate fermentation is correct?',['It regenerates NAD+ by converting pyruvate to lactate','It requires chloroplasts','It releases the oxygen we breathe','It happens only in yeast'],0,'Lactate fermentation converts pyruvate to lactate and regenerates NAD+. It occurs in some bacteria and in animal cells under certain conditions.','Focus on pyruvate and the recycling of NAD+.']],
+[['Which pairing correctly matches a protein to its building blocks?',['Protein → nucleotides','Protein → amino acids','Protein → monosaccharides','Protein → fatty acids only'],1,'Proteins are chains of amino acids. Their sequence and folding help determine their function.','Proteins use building blocks different from DNA.'],['Which macromolecule group includes starch and glycogen?',['Proteins','Nucleic acids','Carbohydrates','Lipids'],2,'Starch and glycogen are polysaccharides made of glucose units. Starch stores energy in plants; glycogen stores it in animals and fungi.','Both are chains of sugar units.'],['Which is a major role of phospholipids?',['Store the genetic code','Act as all cellular enzymes','Form cellulose fibers','Form the bilayer of cell membranes'],3,'Phospholipids have water-attracting heads and water-avoiding tails, which allow them to form membrane bilayers.','Think about the boundary surrounding a cell.'],['DNA and RNA are built from…',['Nucleotides','Amino acids','Glycerol only','Glucose only'],0,'Nucleic acids are chains of nucleotides. Each nucleotide contains a sugar, phosphate group, and nitrogen-containing base.','Look for the building blocks that contain nitrogenous bases.']]
+];
+const c=$('canvas'),ctx=c.getContext('2d');let players=[],world=0,started=false,state='start',keys={},map,question=null,last=0,clock=0,toast='',toastUntil=0;
+let teamSolved=new Set(),teamRecords=[],collectedCoins=new Set(),shopTab='all';
+const W=2800,FLOOR=414,boxXs=[300,920,1580,2260];
+const outfits={
+ classic:{name:'Classic lab coat',coat:'#fff2db',trim:null},
+ cranberry:{name:'Cranberry coat',coat:'#a84558',trim:'#ffd08c'},
+ explorer:{name:'Autumn explorer',coat:'#927047',trim:'#493b2c'},
+ starlight:{name:'Starlight suit',coat:'#645784',trim:'#ffe49b'}
+};
+const stock=[
+ {id:'guineaPig',name:'Guinea pig buddy',kind:'accessory',type:'accessory',cost:25,unlock:0,desc:'A tiny guinea pig follows you as you run and jump. Buy once; equip or unequip for free.'},
+ {id:'labCoat',name:'Lab coat accessory',kind:'accessory',type:'accessory',cost:15,unlock:0,desc:'Layer a white lab coat over any outfit, with sleeves and a pocket. Keep it for the adventure.'},
+ {id:'goggles',name:'Safety goggles',kind:'accessory',type:'accessory',cost:10,unlock:0,desc:'Wear golden safety goggles with clear blue lenses. Works with your outfit and hat.'},
+ {id:'pipette',name:'Bubble pipette',kind:'power',type:'accessory',cost:30,unlock:1,desc:'A pipette weapon that fires bubbles to clear microbes. Player 1: F. Player 2: / (slash). No coin cost to fire. Aim by facing left or right.'},
+ {id:'classic',name:'Classic lab coat',kind:'style',type:'outfit',cost:0,unlock:0,desc:'Your original scientist outfit. Switch back for free.'},
+ {id:'cranberry',name:'Cranberry coat',kind:'style',type:'outfit',cost:15,unlock:0,desc:'A rich cranberry coat with gold trim. Buy once; re-equip for free.'},
+ {id:'explorer',name:'Autumn explorer',kind:'style',type:'outfit',cost:20,unlock:0,desc:'A woodland vest with a golden pocket. Permanent for this adventure.'},
+ {id:'hat',name:'Harvest hat',kind:'style',type:'hat',cost:20,unlock:1,desc:'A tall harvest hat. Buy once, then wear or remove it for free.'},
+ {id:'starlight',name:'Starlight suit',kind:'style',type:'outfit',cost:30,unlock:2,desc:'A plum suit with a bright star. Permanent for this adventure.'},
+ {id:'shield',name:'One-hit shield',kind:'power',type:'consumable',cost:12,unlock:0,desc:'Absorbs one obstacle hit. Resets next world; refill after use.'},
+ {id:'big',name:'Growth mushroom',kind:'power',type:'consumable',cost:18,unlock:0,desc:'Grow taller and jump higher for the current world.'},
+ {id:'boots',name:'Trail boots',kind:'power',type:'permanent',cost:35,unlock:1,desc:'Run about 16% faster. Lasts through every remaining world.'},
+ {id:'permanentDouble',name:'Forever double jump',kind:'power',type:'permanent',cost:45,unlock:1,desc:'Jump again in midair. Unlike the box reward, this carries into later worlds.'},
+ {id:'magnet',name:'Coin magnet',kind:'power',type:'permanent',cost:30,unlock:2,desc:'Collect coins within 100 game pixels. Lasts for the rest of the adventure.'}
+];
+let shopChoice=0,bubbles=[];
+function awardCoins(p,amount){p.coins+=amount;p.earned+=amount}
+function fillPlayers(select){
+ select.innerHTML='';players.forEach((p,i)=>{const option=document.createElement('option');option.value=String(i);option.textContent='Player '+(i+1)+' · '+p.name;select.appendChild(option)});
+}
+function applyGrowth(p){
+ if(p.big)return;
+ const oldY=p.y,oldFeet=p.y+p.h;
+ p.big=true;p.h=48;p.w=29;p.y=oldFeet-p.h;
+ for(const solid of map.solids.concat(map.boxes))if(overlap(p,solid)){
+  if(oldY>=solid.y+solid.h-2)p.y=solid.y+solid.h+1;
+  else if(oldFeet<=solid.y+2)p.y=solid.y-p.h;
+ }
+}
+function openShop(between=false){
+ if(state!=='play'&&state!=='pause')return;
+ if(state==='pause')resume();
+ state='shop';keys={};shopTab='all';shopChoice=Math.min(shopChoice,players.length-1);
+ $('shopMeta').textContent=between?'World '+(world+1)+' unlocked · '+topics[world].name:'Harvest trading post · World '+(world+1);
+ $('closeShopBtn').textContent=between?'Enter the next world →':'Back to adventure →';
+ fillPlayers($('shopPlayer'));$('shopPlayer').value=String(shopChoice);
+ $('shopMessage').textContent=between?'New world! Browse newly unlocked items, or keep saving your coins.':'Choose a scientist, then spend their coins. You can re-equip owned outfits for free.';
+ $('shop').hidden=false;renderShop();$('shopPlayer').focus();
+}
+function closeShop(){if(state!=='shop')return;$('shop').hidden=true;state='play';keys={};c.focus()}
+function itemState(p,item){
+ if(item.type==='outfit')return {owned:p.owned.includes(item.id),equipped:p.outfit===item.id};
+ if(item.type==='accessory')return {owned:p.owned.includes(item.id),equipped:!!p[item.id]};
+ if(item.type==='hat')return {owned:p.owned.includes('hat'),equipped:p.hat};
+ return {owned:!!p[item.id],equipped:!!p[item.id]};
+}
+function renderShop(){
+ const p=players[shopChoice];if(!p)return;
+ const look=outfits[p.outfit];
+ $('shopWallet').textContent=p.name+' · 🪙 '+p.coins+' coins';
+ $('shopEquipment').textContent=look.name+(p.hat?' + harvest hat':'')+(p.boots?' · trail boots':'')+(p.magnet?' · coin magnet':'')+(p.permanentDouble?' · permanent double jump':'')+['guineaPig','labCoat','goggles','pipette'].filter(id=>p[id]).map(id=>' · '+stock.find(item=>item.id===id).name).join('');
+ $('shopAvatar').innerHTML='<svg viewBox="0 0 56 70" width="100%" height="100%"><rect x="13" y="29" width="30" height="30" fill="'+look.coat+'"/><rect x="16" y="12" width="24" height="22" fill="#ffd8b7"/><rect x="12" y="10" width="32" height="7" fill="'+(look.trim||p.color)+'"/><rect x="19" y="23" width="4" height="4" fill="#382027"/><rect x="33" y="23" width="4" height="4" fill="#382027"/><rect x="12" y="34" width="32" height="7" fill="'+(look.trim||p.color)+'"/><rect x="12" y="58" width="12" height="6" fill="'+(p.boots?'#b5dbac':p.color)+'"/><rect x="32" y="58" width="12" height="6" fill="'+(p.boots?'#b5dbac':p.color)+'"/>'+(p.hat?'<rect x="8" y="8" width="40" height="4" fill="#f1bd65"/><rect x="16" y="0" width="24" height="9" fill="#87543a"/>':'')+(p.outfit==='starlight'?'<text x="28" y="54" font-size="15" text-anchor="middle" fill="#ffe49b">✦</text>':'')+(p.labCoat?'<path d="M13 36H20V57H10V42H6V35H13M36 36H43L50 35V42H46V57H36Z" fill="#fff8e8"/><rect x="37" y="44" width="7" height="5" fill="#b6d9da"/>':'')+(p.goggles?'<rect x="15" y="21" width="26" height="8" rx="2" fill="#b8e4ed" stroke="#d6aa55" stroke-width="2"/><path d="M28 21V29" stroke="#d6aa55"/>':'')+(p.pipette?'<rect x="39" y="40" width="15" height="4" fill="#b8e4ed"/><rect x="38" y="38" width="5" height="9" fill="#80bcae"/>':'')+(p.guineaPig?'<ellipse cx="8" cy="61" rx="8" ry="5" fill="#ba8752"/><ellipse cx="11" cy="60" rx="3" ry="4" fill="#fff0d5"/><circle cx="4" cy="59" r="1" fill="#2d1d22"/>':'')+'</svg>';
+ document.querySelectorAll('[data-shop-tab]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.shopTab===shopTab)));
+ $('shopItems').innerHTML='';
+ stock.filter(item=>shopTab==='all'||item.kind===shopTab).forEach(item=>{
+  const locked=world<item.unlock,status=itemState(p,item);
+  const card=document.createElement('article');card.className='shop-item'+(locked?' locked':'');
+  const heading=document.createElement('h3');heading.textContent=item.name;
+  const tag=document.createElement('div');tag.className='shop-label';tag.textContent=locked?'Unlocks in World '+(item.unlock+1):item.type==='consumable'?'CURRENT WORLD':item.type==='outfit'||item.type==='hat'||item.type==='accessory'?'EQUIPMENT · KEEP FOR THIS ADVENTURE':'PERMANENT ABILITY';
+  const desc=document.createElement('p');desc.textContent=item.desc;
+  const button=document.createElement('button');
+  if(locked){button.textContent='Locked · World '+(item.unlock+1);button.disabled=true}
+  else if(item.type==='outfit'&&status.equipped){button.textContent='Equipped';button.disabled=true}
+  else if(status.owned&&(item.type==='outfit'||item.type==='hat'||item.type==='accessory')){button.textContent=item.type==='accessory'?(p[item.id]?'Unequip · free':'Equip · free'):item.type==='hat'?(p.hat?'Remove hat · free':'Wear hat · free'):'Equip · free'}
+  else if(status.owned){button.textContent=item.type==='consumable'?'Active this world':'Owned · permanent';button.disabled=true}
+  else{button.textContent='Buy · '+item.cost+' coins';button.disabled=p.coins<item.cost;if(button.disabled)button.textContent+=' (need '+(item.cost-p.coins)+' more)'}
+  button.onclick=()=>buyItem(item.id);[heading,tag,desc,button].forEach(el=>card.appendChild(el));$('shopItems').appendChild(card);
+ });
+}
+function buyItem(id){
+ if(state!=='shop')return;
+ const p=players[shopChoice],item=stock.find(item=>item.id===id);if(!p||!item||world<item.unlock)return;
+ const status=itemState(p,item);
+ if(status.owned){
+  if(item.type==='outfit')p.outfit=id;
+  else if(item.type==='hat')p.hat=!p.hat;
+  else if(item.type==='accessory'){p[id]=!p[id];if(id==='guineaPig'){p.buddyX=p.x-p.face*38;p.buddyY=p.y+p.h-14}}
+  else return;
+  $('shopMessage').textContent=p.name+': style updated at no extra cost.';
+ }else{
+  if(p.coins<item.cost)return;
+  p.coins-=item.cost;p.spent+=item.cost;
+  if(item.type==='outfit'){p.owned.push(id);p.outfit=id}
+  else if(item.type==='hat'){p.owned.push('hat');p.hat=true}
+  else if(item.type==='accessory'){p.owned.push(id);p[id]=true;if(id==='guineaPig'){p.buddyX=p.x-p.face*38;p.buddyY=p.y+p.h-14}}
+  else if(id==='big')applyGrowth(p);
+  else if(id==='permanentDouble'){p.permanentDouble=true;p.double=true}
+  else p[id]=true;
+  $('shopMessage').textContent=p.name+' bought '+item.name+' for '+item.cost+' coins.';
+ }
+ renderShop();
+}
+$('shopBtn').onclick=()=>openShop();$('closeShopBtn').onclick=closeShop;
+$('shopPlayer').onchange=()=>{shopChoice=Number($('shopPlayer').value);$('shopMessage').textContent='Shopping with '+players[shopChoice].name+'’s coins.';renderShop()};
+document.querySelectorAll('[data-shop-tab]').forEach(b=>b.onclick=()=>{shopTab=b.dataset.shopTab;renderShop()});
+
+function active(){return players.filter(p=>p.active)}
+function tell(t){$('notice').textContent=t}
+function toastMessage(t){toast=t;toastUntil=clock+3}
+function buildMap(){map={solids:[{x:0,y:FLOOR,w:680,h:100},{x:780,y:FLOOR,w:580,h:100},{x:1460,y:FLOOR,w:610,h:100},{x:2170,y:FLOOR,w:630,h:100},{x:470,y:340,w:100,h:18},{x:1110,y:332,w:110,h:18},{x:1780,y:340,w:105,h:18},{x:2400,y:333,w:110,h:18}],boxes:boxXs.map((x,i)=>({x,y:294,w:44,h:44,i})),spikes:[{x:575,y:396,w:48,h:18},{x:1210,y:396,w:48,h:18},{x:1900,y:396,w:48,h:18},{x:2470,y:396,w:48,h:18}],enemies:[{x:1010,a:1000,b:1100,defeated:false},{x:1680,a:1650,b:1760,defeated:false}],coins:Array.from({length:25},(_,i)=>({x:160+i*100,y:365-Math.sin(i)*10,i})),checkpoints:[60,810,1490,2200]};
+ // Airborne coin arcs invite jumps across each gap and over raised platforms.
+ const airborne=[];
+ for(const center of [730,1410,2120]){
+  for(let j=0;j<5;j++)airborne.push({x:center+(j-2)*35,y:300+Math.abs(j-2)*23});
+ }
+ for(const platform of map.solids.filter(s=>s.h===18)){
+  for(let j=0;j<3;j++)airborne.push({x:platform.x+platform.w*(j+1)/4,y:platform.y-56-(j===1?18:0)});
+ }
+ airborne.forEach(coin=>map.coins.push({...coin,i:map.coins.length}));
+}
+function newPlayer(i){return {active:true,name:$(i?'name1':'name0').value.trim()||(i?'Maple scientist':'Golden scientist'),color:i?'#ff987d':'#f5cc70',x:65+i*45,y:370,w:24,h:34,vx:0,vy:0,ground:false,jumps:0,coins:0,earned:0,spent:0,owned:['classic'],outfit:'classic',hat:false,guineaPig:false,labCoat:false,goggles:false,pipette:false,shotCooldown:0,buddyX:30,buddyY:390,boots:false,magnet:false,permanentDouble:false,solved:[],collected:new Set(),big:false,shield:false,double:false,inv:0,checkpoint:60,done:false,records:[],falls:0,face:1};}
+function loadWorld(){buildMap();bubbles=[];teamSolved=new Set();collectedCoins=new Set();players.forEach((p,i)=>{Object.assign(p,{x:65+i*45,y:370,vx:0,vy:0,w:24,h:34,ground:false,jumps:0,solved:[],collected:new Set(),big:false,shield:false,double:false,inv:0,checkpoint:60,done:false});p.double=p.permanentDouble;p.shotCooldown=0;p.buddyX=p.x-38;p.buddyY=p.y+p.h-14;});$('worlds').innerHTML=topics.map((t,i)=>'<div class="world '+(i===world?'active':'')+'">'+(i<world?'✓ CLEARED':t.tag)+'<b>'+t.name+'</b></div>').join('');tell('World '+(world+1)+': '+topics[world].name+' • Solve all 4 boxes, then reach the flag.');}
+function startGame(){players=[newPlayer(0)];if($('mode').value==='2')players.push(newPlayer(1));world=0;clock=0;teamRecords=[];shopChoice=0;started=true;loadWorld();state='play';keys={};$('start').hidden=true;$('end').hidden=true;$('info').hidden=true;$('shop').hidden=true;c.focus();}
+function overlap(a,b){return a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y}
+function controls(i){return i===0?{left:['KeyA'].concat(players.length===1?['ArrowLeft']:[]),right:['KeyD'].concat(players.length===1?['ArrowRight']:[]),jump:['KeyW'].concat(players.length===1?['ArrowUp']:[]),down:['KeyS'].concat(players.length===1?['ArrowDown']:[])}:{left:['ArrowLeft'],right:['ArrowRight'],jump:['ArrowUp'],down:['ArrowDown']}}
+function jump(i){const p=players[i];if(!p||p.done)return;if(p.ground||(p.double&&p.jumps<2)){p.vy=p.big?-580:-550;p.ground=false;p.jumps++;}}
+function respawn(p){p.falls++;p.x=p.checkpoint;p.y=340;p.vx=0;p.vy=0;p.inv=1.5;p.ground=false;p.jumps=0;}
+function hurt(p){if(p.inv>0)return;if(p.shield){p.shield=false;p.inv=2;p.vy=-350;toastMessage(p.name+': shield absorbed the hit!')}else{respawn(p);toastMessage(p.name+': back to your checkpoint. Keep going!')}}
+function openQuiz(p,b){if(state!=='play'||teamSolved.has(b.i))return;state='quiz';keys={};const qi=b.i;question={b,q:bank[world][qi],tries:0,correct:false,qi};Object.defineProperty(question,'rewardOwner',{value:players.indexOf(p),writable:false});$('automaticReward').textContent='Automatic reward → Player '+(question.rewardOwner+1)+' · '+p.name+' (the character who bumped this box)';$('qMeta').textContent=p.name+' • Team question • '+topics[world].name+' • Box '+(b.i+1);$('qTitle').textContent=question.q[0];$('feedback').textContent=p.name+' receives: '+['growth mushroom','one-hit shield','double jump','20 bonus coins'][b.i]+' + 10 coins';$('answers').innerHTML='';question.q[1].forEach((a,i)=>{const btn=document.createElement('button');btn.textContent=(i+1)+'. '+a;btn.onclick=()=>answer(i);$('answers').appendChild(btn)});$('continueBtn').hidden=true;$('quiz').hidden=false;$('answers').firstChild.focus();}
+function answer(i){if(state!=='quiz'||question.correct)return;const q=question;if($('answers').children[i].disabled)return;q.tries++;if(i!==q.q[2]){$('answers').children[i].disabled=true;$('answers').children[i].classList.add('wrong');$('feedback').textContent='Try again. '+q.q[4];return;}q.correct=true;const p=players[q.rewardOwner];teamSolved.add(q.b.i);players.forEach(player=>player.solved=Array.from(teamSolved));awardCoins(p,10);const record={world,qi:q.qi,tries:q.tries,player:players.indexOf(p)};p.records.push(record);teamRecords.push(record);let reward='';if(q.b.i===0){applyGrowth(p);reward='Growth mushroom! You are bigger and jump higher.'}if(q.b.i===1){p.shield=true;reward='Shield ready! It absorbs one obstacle hit.'}if(q.b.i===2){p.double=true;reward='Double jump unlocked! Release and press jump again in the air.'}if(q.b.i===3){awardCoins(p,20);reward='Coin burst! +20 bonus coins.'}$('feedback').textContent='Correct! Team box cleared. '+p.name+' earned the reward. '+q.q[3]+' '+reward;$('feedback').className='feedback reward';Array.from($('answers').children).forEach(b=>b.disabled=true);$('continueBtn').hidden=false;$('continueBtn').focus();}
+function continueGame(){$('quiz').hidden=true;$('feedback').className='feedback';question=null;state='play';keys={};c.focus();}
+function pause(help=false){if(!started||state!=='play')return;const stale=$('resetConfirm');if(stale)stale.remove();$('resumeBtn').textContent='Resume →';state='pause';keys={};$('infoTitle').textContent=help?'How to play':'Game paused';$('infoText').textContent=help?'Player 1: A / D to move, W to jump. Player 2: left / right arrows to move, up arrow to jump. S or down arrow brakes. Hit each glowing question box from underneath. Both players appear together on one shared screen. The camera zooms out to keep everyone visible. Each box needs one correct answer for the team. The character who bumps the box automatically receives its coins and power-up after a correct answer. Both characters must reach the flag. Coins on the course go to the first character to touch them. Press B to shop. Buy and equip a guinea pig buddy, lab coat, goggles, or bubble pipette. With a pipette equipped, Player 1 fires with F and Player 2 with slash (/); face left or right to aim. Jump over gaps, spikes, and microbes. Land on top of a microbe to clear it for the whole team and bounce upward. Side contact still hurts. Follow the airborne coin trails over gaps and platforms. Gold beacons mark checkpoints. Box powers reset each world. Purchased outfits, hats, boots, magnets, and double jump carry over. Shields and growth mushrooms last for the current world.':'Take your time. Your adventure will be right here.';$('info').hidden=false;$('resumeBtn').focus();}
+function resume(){const stale=$('resetConfirm');if(stale)stale.remove();$('resumeBtn').textContent='Resume →';$('info').hidden=true;state='play';keys={};c.focus()}
+function finish(){
+ state='end';keys={};$('report').innerHTML='';
+ const summary=document.createElement('p');summary.textContent='Team: '+teamRecords.length+'/16 questions solved • '+teamRecords.filter(r=>r.tries===1).length+'/16 correct on the first try.';$('report').appendChild(summary);
+ const table=document.createElement('table');table.className='results';table.innerHTML='<thead><tr><th>Scientist</th><th>Earned</th><th>Spent</th><th>Coins left</th><th>Answered</th></tr></thead>';
+ const body=document.createElement('tbody');players.forEach(p=>{const row=document.createElement('tr');[p.name,p.earned,p.spent,p.coins,p.records.length].forEach(v=>{const td=document.createElement('td');td.textContent=v;row.appendChild(td)});body.appendChild(row)});table.appendChild(body);$('report').appendChild(table);$('end').hidden=false;$('againBtn').focus();
+}
+function update(dt){clock+=dt;for(let i=0;i<players.length;i++){if(state!=='play')break;const p=players[i];if(p.done)continue;p.shotCooldown=Math.max(0,p.shotCooldown-dt);p.inv=Math.max(0,p.inv-dt);const ct=controls(i),left=ct.left.some(k=>keys[k]),right=ct.right.some(k=>keys[k]),brake=ct.down.some(k=>keys[k]);p.vx=((right?1:0)-(left?1:0))*(brake?100:p.boots?285:245);if(p.vx)p.face=Math.sign(p.vx);const solids=map.solids.concat(map.boxes);p.x+=p.vx*dt;p.x=Math.max(0,Math.min(W-p.w,p.x));for(const s of solids)if(overlap(p,s)){if(p.vx>0)p.x=s.x-p.w;else if(p.vx<0)p.x=s.x+s.w;}const oldY=p.y;p.vy+=1450*dt;p.y+=p.vy*dt;p.ground=false;for(const s of solids){if(overlap(p,s)){if(p.vy>=0&&oldY+p.h<=s.y+2){p.y=s.y-p.h;p.vy=0;p.ground=true;p.jumps=0;}else if(p.vy<0&&oldY>=s.y+s.h-2){p.y=s.y+s.h;p.vy=100;if(s.i!==undefined&&!teamSolved.has(s.i))openQuiz(p,s);}}}if(state!=='play')break;for(const cp of map.checkpoints)if(p.x>=cp&&cp>p.checkpoint){p.checkpoint=cp;toastMessage(p.name+': checkpoint reached!')}for(const coin of map.coins){const touching=overlap(p,{x:coin.x-9,y:coin.y-9,w:18,h:18});const near=p.magnet&&Math.hypot(p.x+p.w/2-coin.x,p.y+p.h/2-coin.y)<100;if(!collectedCoins.has(coin.i)&&(touching||near)){collectedCoins.add(coin.i);awardCoins(p,1);}}for(const spike of map.spikes)if(overlap(p,spike))hurt(p);for(let ei=0;ei<map.enemies.length;ei++){const e=map.enemies[ei];if(e.defeated)continue;const ex=e.a+(Math.sin(clock*1.5+ei)+1)/2*(e.b-e.a);if(overlap(p,{x:ex,y:386,w:30,h:28})){if(p.vy>0&&oldY+p.h<=388){e.defeated=true;p.y=386-p.h;p.vy=-420;p.ground=false;p.jumps=1;toastMessage(p.name+': microbe cleared!');}else hurt(p)}}if(p.y>550)respawn(p);if(p.x>2660){if(teamSolved.size===4){p.done=true;toastMessage(p.name+' reached the flag!');tell(players.every(x=>x.done)?'World complete!':'One scientist is at the flag. Waiting for your teammate.');}else{p.x=2635;tell(p.name+': your team needs all four boxes before finishing ('+teamSolved.size+'/4).');}}}if(state==='play'){updateBubbles(dt);players.forEach(p=>{if(p.guineaPig){const target=p.x-p.face*38,amount=1-Math.exp(-dt*8);if(Math.abs(p.buddyX-target)>350){p.buddyX=target;p.buddyY=p.y+p.h-14}else{p.buddyX+=(target-p.buddyX)*amount;p.buddyY+=(p.y+p.h-14-p.buddyY)*amount}}})}if(state==='play'&&players.length&&players.every(p=>p.done)){if(world<3){world++;loadWorld();openShop(true)}else finish()}}
+function rect(x,y,w,h,color){ctx.fillStyle=color;ctx.fillRect(x,y,w,h)}
+function text(t,x,y,size=14,color='#fff',align='left'){ctx.fillStyle=color;ctx.font='bold '+size+'px system-ui';ctx.textAlign=align;ctx.fillText(t,x,y)}
+function firePipette(index){
+ const p=players[index];if(state!=='play'||!p||p.done||!p.pipette||p.shotCooldown>0)return;
+ p.shotCooldown=.4;
+ bubbles.push({x:p.face>0?p.x+p.w+19:p.x-19,y:p.y+p.h*.6,vx:p.face*430,life:1.1,owner:index});
+}
+function updateBubbles(dt){
+ for(const bubble of bubbles){
+  bubble.x+=bubble.vx*dt;bubble.life-=dt;
+  const hitbox={x:bubble.x-7,y:bubble.y-7,w:14,h:14};
+  if(map.solids.concat(map.boxes).some(s=>overlap(hitbox,s))){bubble.life=0;continue}
+  for(let i=0;i<map.enemies.length;i++){
+   const e=map.enemies[i];if(e.defeated)continue;
+   const x=e.a+(Math.sin(clock*1.5+i)+1)/2*(e.b-e.a);
+   if(overlap(hitbox,{x,y:386,w:30,h:28})){e.defeated=true;bubble.life=0;toastMessage(players[bubble.owner].name+': bubble cleared a microbe!');break}
+  }
+ }
+ bubbles=bubbles.filter(b=>b.life>0&&b.x>=0&&b.x<=W);
+}
+function drawGuineaPig(p,cam){
+ const x=p.buddyX-cam,y=p.buddyY+Math.sin(clock*12)*(Math.abs(p.vx)>0?1.5:.3);
+ const direction=p.x>p.buddyX?1:-1;
+ ctx.save();ctx.translate(x+13,y+7);ctx.scale(direction,1);
+ ctx.fillStyle='#8f6847';ctx.beginPath();ctx.ellipse(0,1,14,8,0,0,7);ctx.fill();
+ ctx.fillStyle='#e8c392';ctx.beginPath();ctx.ellipse(6,-1,9,7,0,0,7);ctx.fill();
+ ctx.fillStyle='#fff0d5';ctx.beginPath();ctx.ellipse(-2,0,5,7,0,0,7);ctx.fill();
+ ctx.fillStyle='#b67464';ctx.beginPath();ctx.arc(6,-6,3,0,7);ctx.fill();
+ rect(10,-2,2,2,'#302027');rect(14,1,3,2,'#f0b2a6');rect(-8,7,5,3,'#bd9074');rect(6,7,5,3,'#bd9074');
+ ctx.restore();
+}
+
+function scientist(p,cam){const x=p.x-cam,y=p.y;ctx.save();if(p.inv>0&&Math.floor(clock*12)%2)ctx.globalAlpha=.45;if(p.shield){ctx.strokeStyle='#ffe0a0';ctx.lineWidth=3;ctx.beginPath();ctx.ellipse(x+p.w/2,y+p.h/2,p.w/2+10,p.h/2+9,0,0,7);ctx.stroke()}const look=outfits[p.outfit]||outfits.classic;rect(x+3,y+15,p.w-6,p.h-19,look.coat);if(p.outfit==='explorer'){rect(x+2,y+20,p.w-4,9,look.trim);rect(x+6,y+23,4,4,'#efce85')}if(p.outfit==='starlight'){text('✦',x+p.w/2,y+30,12,look.trim,'center')}if(p.labCoat){rect(x-1,y+18,7,p.h-24,'#fff8e8');rect(x+p.w-6,y+18,7,p.h-24,'#fff8e8');rect(x-5,y+18,5,13,'#fff8e8');rect(x+p.w,y+18,5,13,'#fff8e8');rect(x+p.w-6,y+27,6,5,'#b6d9da')}rect(x+2,y+12,p.w-4,7,p.color);rect(x+5,y+1,p.w-10,15,'#ffd8b7');rect(x+3,y,p.w-6,6,look.trim||p.color);if(p.hat){rect(x-3,y-5,p.w+6,4,'#f1bd65');rect(x+4,y-14,p.w-8,10,'#87543a');rect(x+4,y-7,p.w-8,3,'#e2b15e')}rect(x+(p.face>0?14:7),y+8,4,4,'#382027');if(p.goggles){rect(x+2,y+6,p.w-4,8,'#d6aa55');rect(x+4,y+7,6,5,'#b8e4ed');rect(x+p.w-10,y+7,6,5,'#b8e4ed')}if(p.pipette){const tip=p.face>0?x+p.w:x-18;rect(tip,y+p.h*.6,18,4,'#b8e4ed');rect(p.face>0?tip:tip+13,y+p.h*.6-3,5,10,'#80bcae')}rect(x+3,y+p.h-5,8,5,p.color);rect(x+p.w-11,y+p.h-5,8,5,p.color);if(p.boots){rect(x+1,y+p.h-5,10,5,'#b5dbac');rect(x+p.w-11,y+p.h-5,10,5,'#b5dbac')}if(p.double)text('✦',x+p.w/2,y-9,15,'#f5bd7a','center');ctx.restore()}
+// One camera frames both characters, including a teammate waiting at the flag.
+function sharedCamera(list){
+ const left=Math.min(...list.map(p=>p.x)),right=Math.max(...list.map(p=>p.x+p.w));
+ const zoom=Math.min(1.12,1100/(right-left+340));
+ const viewWidth=1100/zoom;
+ return {zoom,cam:Math.max(0,Math.min(Math.max(0,W-viewWidth),(left+right-viewWidth)/2)),viewWidth,top:414*(1-zoom)};
+}
+function drawShared(list){
+ const t=topics[world],camera=sharedCamera(list),{cam,zoom,viewWidth,top}=camera;
+ rect(0,0,1100,490,t.sky);
+ // Warm woodland backdrop, with slow drifting November leaves.
+ for(let j=0;j<12;j++){
+  const bx=j*180-(cam*.2)%180;
+  ctx.fillStyle=t.hill;ctx.beginPath();ctx.arc(bx,470,190,Math.PI,0);ctx.fill();
+ }
+ for(let j=0;j<9;j++){
+  const x=j*157-(cam*.15)%157;
+  rect(x+28,233,10,182,'#573535');
+  const foliage=['#9e4e35','#ba793a','#8e3941'][j%3];
+  for(const [dx,dy,r] of [[32,220,45],[12,244,34],[54,243,33]]){
+   ctx.fillStyle=foliage;ctx.beginPath();ctx.arc(x+dx,dy,r,0,7);ctx.fill();
+  }
+ }
+ for(let j=0;j<18;j++){
+  const x=(j*97+Math.sin(clock*.45+j)*30)%1120;
+  const y=95+(j*61+clock*12)%310;
+  ctx.save();ctx.translate(x,y);ctx.rotate(Math.sin(clock+j));
+  ctx.fillStyle=['#e5ac56','#c56a42','#ad4c48'][j%3];
+  ctx.beginPath();ctx.ellipse(0,0,4,8,0,0,7);ctx.fill();ctx.restore();
+ }
+ ctx.save();ctx.translate(0,top);ctx.scale(zoom,zoom);
+ map.solids.forEach(s=>{
+  rect(s.x-cam,s.y,s.w,s.h,t.ground);rect(s.x-cam,s.y,s.w,5,t.accent);
+  for(let x=s.x+10;x<s.x+s.w;x+=32)rect(x-cam,s.y+17,12,4,'#ffffff14');
+ });
+ map.spikes.forEach(s=>{ctx.fillStyle='#f4a18b';for(let j=0;j<3;j++){
+  ctx.beginPath();ctx.moveTo(s.x-cam+j*16,s.y+s.h);ctx.lineTo(s.x-cam+j*16+8,s.y);ctx.lineTo(s.x-cam+j*16+16,s.y+s.h);ctx.fill();
+ }});
+ map.checkpoints.slice(1).forEach(cp=>{rect(cp-cam,365,3,49,'#f9d987');text('⚑',cp-cam+3,374,23,'#f9d987')});
+ map.coins.forEach(coin=>{
+  if(collectedCoins.has(coin.i))return;
+  ctx.fillStyle='#ffdc70';ctx.beginPath();ctx.ellipse(coin.x-cam,coin.y,6+Math.sin(clock*4)*2,9,0,0,7);ctx.fill();
+
+ });
+ map.boxes.forEach(b=>{
+  const done=teamSolved.has(b.i);
+  rect(b.x-cam-3,b.y-3,50,50,done?'#76574e':'#ffe39a');
+  rect(b.x-cam,b.y,44,44,done?'#57403b':'#b56c31');
+  text(done?'✓':'?',b.x-cam+22,b.y+31,28,done?'#e4cbb0':'#fff2c7','center');
+  text(['GROW','SHIELD','2× JUMP','BONUS'][b.i],b.x-cam+22,b.y-14,12,t.accent,'center');
+  text(done?'TEAM ✓':'TEAM',b.x-cam+22,b.y+64,11,'#f4d29c','center');
+ });
+ map.enemies.forEach((e,i)=>{
+  if(e.defeated)return;
+  const x=e.a+(Math.sin(clock*1.5+i)+1)/2*(e.b-e.a)-cam;
+  rect(x,391,30,22,'#c96a63');rect(x+5,386,20,9,'#c96a63');
+  rect(x+5,395,5,5,'#382027');rect(x+20,395,5,5,'#382027');
+  rect(x-3,410,10,4,'#824147');rect(x+23,410,10,4,'#824147');
+ });
+ rect(2700-cam,210,5,204,'#fff0d5');ctx.fillStyle=t.accent;ctx.beginPath();
+ ctx.moveTo(2705-cam,210);ctx.lineTo(2770-cam,232);ctx.lineTo(2705-cam,256);ctx.fill();
+ text('FINISH',2700-cam,198,13,t.accent,'center');
+ bubbles.forEach(b=>{ctx.strokeStyle='#b8e4ed';ctx.lineWidth=2;ctx.fillStyle='#a8e7e755';ctx.beginPath();ctx.arc(b.x-cam,b.y,7,0,7);ctx.fill();ctx.stroke();rect(b.x-cam-3,b.y-4,3,2,'#fff')});
+ list.forEach((p,i)=>{
+  if(p.guineaPig)drawGuineaPig(p,cam);
+  scientist(p,cam);
+  // Keep player markers legible as the shared camera zooms out.
+  const px=(p.x-cam+p.w/2)*zoom,py=top+(p.y-18)*zoom;
+  ctx.save();ctx.setTransform(1,0,0,1,0,0);
+  text('P'+(i+1)+(p.done?' ✓':''),px,py,13,p.color,'center');ctx.restore();
+ });
+ ctx.restore();
+ rect(0,0,1100,76,'#291b22ed');text(t.tag,22,29,14,t.accent);
+ text(list.length===2?'SHARED SCREEN • Explore together':'SOLO ADVENTURE',22,54,12,'#efd2b4');
+ text('TEAM BOXES: '+teamSolved.size+'/4',1078,31,15,t.accent,'right');
+ text('One answer clears a box for everyone • B = coin shop',1078,54,11,'#efd2b4','right');
+ if(toast&&clock<toastUntil){rect(15,450,1070,28,'#23171bed');text(toast,550,469,13,'#fff3dd','center')}
+}
+function render(){
+ ctx.clearRect(0,0,1100,490);
+ if(!players.length){drawShared([newPlayer(0),newPlayer(1)]);return}
+ drawShared(players);
+ players.forEach((p,i)=>{$('hud'+i).textContent=p.name+' • '+(i?'← → ↑':'A D W')+' | 🪙 '+p.coins+' | '+(p.big?'🍄 Grown ':'')+(p.shield?'◉ Shield ':'')+(p.double?'✦ Double jump ':'')+' | Answers: '+p.records.length});
+ $('hud1').style.display=players.length===1?'none':'';
+ $('hud0').parentElement.style.gridTemplateColumns=players.length===1?'1fr':'1fr 1fr';
+}
+function frame(now){const dt=Math.min((now-last)/1000||0,.025);last=now;if(state==='play')update(dt);render();requestAnimationFrame(frame)}
+const gameKeys=['KeyA','KeyD','KeyW','KeyS','ArrowLeft','ArrowRight','ArrowUp','ArrowDown','KeyF','Slash'];window.addEventListener('keydown',e=>{if(['INPUT','SELECT'].includes(document.activeElement.tagName))return;if(state==='quiz'&&/^Digit[1-4]$/.test(e.code)){e.preventDefault();answer(Number(e.code.slice(-1))-1);return}if(e.code==='KeyB'&&!e.repeat){if(state==='play'||state==='pause'){e.preventDefault();openShop()}else if(state==='shop'){e.preventDefault();closeShop()}return}if(e.code==='KeyP'){if(state==='play')pause();else if(state==='pause')resume();return}if(state!=='play')return;if(gameKeys.includes(e.code))e.preventDefault();const first=!keys[e.code];keys[e.code]=true;if(first)players.forEach((p,i)=>{if(controls(i).jump.includes(e.code))jump(i);if(e.code===(i===0?'KeyF':'Slash')||(players.length===1&&e.code==='Slash'))firePipette(i)})});window.addEventListener('keyup',e=>{keys[e.code]=false});window.addEventListener('blur',()=>{keys={};if(state==='play')pause()});document.addEventListener('visibilitychange',()=>{if(document.hidden&&state==='play')pause()});
+$('startBtn').onclick=startGame;$('continueBtn').onclick=continueGame;$('pauseBtn').onclick=()=>{if(state==='pause')resume();else pause()};$('helpBtn').onclick=()=>pause(true);$('resumeBtn').onclick=resume;$('restartBtn').onclick=()=>{if(state==='quiz'||state==='end'||state==='start'||state==='shop')return;pause();$('infoTitle').textContent='Start a new adventure?';$('infoText').textContent='Starting again resets coins, questions, and progress. Close this window to keep playing.';$('resumeBtn').textContent='Keep playing →';const old=$('resetConfirm');if(old)old.remove();const b=document.createElement('button');b.id='resetConfirm';b.textContent='Reset and choose players';b.className='wide';b.style.marginTop='10px';b.onclick=()=>{b.remove();$('resumeBtn').textContent='Resume →';$('info').hidden=true;$('start').hidden=false;state='start';keys={};$('startBtn').focus()};$('infoText').after(b)};
+$('againBtn').onclick=()=>{$('end').hidden=true;$('start').hidden=false;state='start';$('startBtn').focus()};$('printBtn').onclick=()=>window.print();document.querySelectorAll('[data-key]').forEach(b=>{b.onpointerdown=e=>{e.preventDefault();if(state!=='play')return;b.setPointerCapture(e.pointerId);keys[b.dataset.key]=true;if(b.dataset.key==='KeyW')jump(0)};b.onpointerup=b.onpointercancel=()=>keys[b.dataset.key]=false});
+buildMap();$('worlds').innerHTML=topics.map(t=>'<div class="world">'+t.tag+'<b>'+t.name+'</b></div>').join('');requestAnimationFrame(frame);
+</script>
+</body></html>
